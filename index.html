@@ -172,20 +172,10 @@
     var generation = d3.select("#generation").property("value");
     var legendary = d3.select("#legendary").property("value");
 
-    console.log(data)
-    console.log(generation);
-    console.log(legendary)
-
     var select = d3.select("#pokemonSelection")
       .on("change", function() {
         updateChart(data, this.value);
       })
-
-    // var selectGenaration = d3.select("#generation")
-    //   .on("change", function() {
-    //     generation = this.value;
-    //     filterPokemonList(data, generation, legendary);
-    //   })  
 
     var selectGenaration = d3.select("#generation")
       .on("change", function() {
@@ -248,10 +238,16 @@
     //   // updatePokemonList(pokemonStats);
     // }
 
-    function filterPokemonList(data, theGeneration, isLegendary) {
+    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax) {
       // filter data based on the given pokemon generation
-      var pokemonStats = _.filter(data, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
-      updatePokemonList(pokemonStats);
+      // var pokemonStats = _.filter(data, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
+      var pokemonStats = _.filter(data, function(o) {
+        return o.hp > hpMin && o.hp < hpMax;
+      } );
+      console.log(hpMin);
+      console.log(hpMax);
+      console.log(pokemonStats);
+      // updatePokemonList(pokemonStats);
     }
 
     // data is an array that gets populated with all the rows in the csv
@@ -293,6 +289,8 @@
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#hp-value-range').text(val.join('-'));
+        var hpValue = (d3.select("#hp-value-range").text().split("-"));
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1]);
 	    });
 
 	  var gHpRange = d3
