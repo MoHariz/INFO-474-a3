@@ -22,15 +22,12 @@
   <div class="main container-fluid d-flex">
     <div class="visualization col-6">
     <h2>Visualization</h2>
+    <p>Choose your pokemon:
+    	<select id="pokemonSelection"></select>
+    </p>
+    <!-- visualization -->
     <div id="chart"></div>
 
-    <!-- visualization -->
-      <p>Choose your pokemon:
-        <select id="pokemonSelection"></select>
-      </p>
-      <div class="visualization">
-        <radar csv="radar.csv" config="radar.config"></radar>
-      </div>
     </div>
 
 
@@ -148,8 +145,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.js"></script>
   <script src="http://d3js.org/d3.v4.min.js"></script>
   <script src="https://unpkg.com/d3-simple-slider"></script>
+  <script src="RadarChart.js"></script>
   <script type"text/javascript">
 
+var kek2 = [];
 
   d3.csv('pokemon.csv', function(data) {
     data.forEach(function(d) {
@@ -170,25 +169,64 @@
         var select = d3.select("#pokemonSelection")
           .on("change", function() {
             // update(data, this.value)
-            var newPokemon = _.filter(data, { 'name': this.value });
-            console.log(newPokemon);
-            console.log(newPokemon[0].attack);
+            update(data, this.value);
           })
 
     update(data, d3.select("#pokemonSelection").property("value"));
 
-    function update(data, pokemonName) {
-          // filter data based on the given years
-          var data = _.filter(data, { 'name': pokemonName });
-          console.log(data[0]);
-          }
 
-    console.log(pokemons);
+
+    function update(data, pokemonName) {
+    	kek2 = [];
+          // filter data based on the given years
+          var pokemonStats = _.filter(data, { 'name': pokemonName });
+          var newStats = [
+          				{axis:"HP",value: pokemonStats[0].hp},
+						{axis:"Attack",value: pokemonStats[0].attack},
+						{axis:"Defense",value: pokemonStats[0].defense},
+						{axis:"Sp. Atk",value: pokemonStats[0].sp_attack},
+						{axis:"Sp.Def",value: pokemonStats[0].sp_defense},
+						{axis:"Speed",value: pokemonStats[0].speed}
+          ];
+          kek2.push(newStats);
+          createRadarChart(kek2);
+          console.log(kek2);
+          }
 
     // data is an array that gets populated with all the rows in the csv
     // console.log(data);
+
+			////////////////////////////////////////////////////////////// 
+			//////////////////// Draw the Chart ////////////////////////// 
+			////////////////////////////////////////////////////////////// 
+
+			
+	function createRadarChart(data) {
+		var color = d3.scaleOrdinal()
+                .range(["#EDC951","#CC333F","#00A0B0"]);
+				
+			var radarChartOptions = {
+			  w: width,
+			  h: height,
+			  margin: margin,
+			  maxValue: 100,
+			  levels: 5,
+			  roundStrokes: false,
+			  color: color
+			};
+
+			RadarChart("#chart", kek2, radarChartOptions);
+	}
+			//Call function to draw the Radar chart
   });
 
+  			var margin = {top: 100, right: 100, bottom: 100, left: 100},
+				width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+				height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+					
+			////////////////////////////////////////////////////////////// 
+			////////////////////////// Data ////////////////////////////// 
+			////////////////////////////////////////////////////////////// 
 
 
   var numbas = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
