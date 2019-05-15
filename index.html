@@ -103,8 +103,8 @@
           <!--Dropdown-->
           <p><strong>Legendary:</strong> 
             <select id="legendary">
-              <option value="1">yes</option>
               <option value="0">no</option>
+              <option value="1">yes</option>
             </select>
           </p>
         </div>
@@ -161,43 +161,52 @@
   <script src="RadarChart.js"></script>
   <script type"text/javascript">
 
-var kek2 = [];
+var thePokemon = [];
 
   d3.csv('pokemon.csv', function(data) {
     data.forEach(function(d) {
       // returning each row of the csv and putting it into the data
-      d.name = d.name;
-      d.hp = +d.hp;
-      // console.log(d.name);
       return d;
     })
 
     console.log(data)
 
-    var pokemons = [...new Set(data.map(function(d) { return d.name; }))]
+    var select = d3.select("#pokemonSelection")
+      .on("change", function() {
+        updateChart(data, this.value);
+      })
 
-        var options = d3.select("#pokemonSelection").selectAll("option")
-          .data(pokemons)
-        .enter().append("option")
+    var selectGenaration = d3.select("#generation")
+      .on("change", function() {
+        updateGeneration(data, this.value);
+      })
+
+    var selectLegendary = d3.select("#legendary")
+      .on("change", function() {
+        updateLegendary(data, this.value);
+      })
+
+    updatePokemonList(data);
+    updateChart(data, d3.select("#pokemonSelection").property("value"));
+
+    function updatePokemonList(data) {
+    	var newPokemons = [...new Set(data.map(function(d) { return d.name; }))]
+    	console.log(newPokemons);
+    	d3.selectAll(".pokemon").remove();
+
+    	var newOptions = d3.select("#pokemonSelection").selectAll("option")
+          .data(newPokemons)
+
+        newOptions.enter().append("option")
+        	.attr('class', 'pokemon')
           .text(function(d) {return d;})
 
-        var select = d3.select("#pokemonSelection")
-          .on("change", function() {
-            update(data, this.value);
-          })
-
-        var selectGenaration = d3.select("#generation")
-          .on("change", function() {
-            updateGeneration(data, this.value);
-          })
-
-
-    update(data, d3.select("#pokemonSelection").property("value"));
-    updateGeneration(data, d3.select('#generation').property("value"));
+      updateChart(data, d3.select("#pokemonSelection").property("value"));
+    }
 
     // update by pokemon name
-    function update(data, pokemonName) {
-    	kek2 = [];
+    function updateChart(data, pokemonName) {
+    	thePokemon = [];
       // filter data based on the given years
       var pokemonStats = _.filter(data, { 'name': pokemonName });
       var newStats = [
@@ -208,17 +217,22 @@ var kek2 = [];
         {axis:"Sp.Def",value: pokemonStats[0].sp_defense},
         {axis:"Speed",value: pokemonStats[0].speed}
       ];
-      kek2.push(newStats);
-      createRadarChart(kek2);
-      console.log(kek2);
+      thePokemon.push(newStats);
+      createRadarChart(thePokemon);
     }
 
     // update by pokemon gereration
     function updateGeneration(data, generation) {
-    	kek2 = [];
       // filter data based on the given pokemon generation
       var pokemonStats = _.filter(data, { 'generation': generation });
+      updatePokemonList(pokemonStats);
+    }
+
+    function updateLegendary(data, isLegendary) {
+      // filter data based on the given pokemon generation
+      var pokemonStats = _.filter(data, { 'is_legendary': isLegendary });
       console.log(pokemonStats);
+      // updatePokemonList(pokemonStats);
     }
 
     // data is an array that gets populated with all the rows in the csv
@@ -243,7 +257,7 @@ var kek2 = [];
 			  color: color
 			};
 
-			RadarChart("#chart", kek2, radarChartOptions);
+			RadarChart("#chart", data, radarChartOptions);
 	}
 			
 
