@@ -162,6 +162,8 @@
   <script type"text/javascript">
 
 var thePokemon = [];
+var generation = 1;
+var legendary = 0;
 
   d3.csv('pokemon.csv', function(data) {
     data.forEach(function(d) {
@@ -178,16 +180,18 @@ var thePokemon = [];
 
     var selectGenaration = d3.select("#generation")
       .on("change", function() {
-        updateGeneration(data, this.value);
+        generation = this.value;
+        filterPokemonList(data, generation, legendary);
       })
 
     var selectLegendary = d3.select("#legendary")
       .on("change", function() {
-        updateLegendary(data, this.value);
+        legendary = this.value;
+        filterPokemonList(data, generation, legendary);
       })
 
+    //Creates chart with first pokemon in list on start
     updatePokemonList(data);
-    updateChart(data, d3.select("#pokemonSelection").property("value"));
 
     function updatePokemonList(data) {
     	var newPokemons = [...new Set(data.map(function(d) { return d.name; }))]
@@ -222,17 +226,23 @@ var thePokemon = [];
     }
 
     // update by pokemon gereration
-    function updateGeneration(data, generation) {
-      // filter data based on the given pokemon generation
-      var pokemonStats = _.filter(data, { 'generation': generation });
-      updatePokemonList(pokemonStats);
-    }
+    // function updateGeneration(data, generation) {
+    //   // filter data based on the given pokemon generation
+    //   var pokemonStats = _.filter(data, { 'generation': generation });
+    //   updatePokemonList(pokemonStats);
+    // }
 
-    function updateLegendary(data, isLegendary) {
+    // function updateLegendary(data, isLegendary) {
+    //   // filter data based on the given pokemon generation
+    //   var pokemonStats = _.filter(data, { 'is_legendary': isLegendary });
+    //   console.log(pokemonStats);
+    //   // updatePokemonList(pokemonStats);
+    // }
+
+    function filterPokemonList(data, theGeneration, isLegendary) {
       // filter data based on the given pokemon generation
-      var pokemonStats = _.filter(data, { 'is_legendary': isLegendary });
-      console.log(pokemonStats);
-      // updatePokemonList(pokemonStats);
+      var pokemonStats = _.filter(data, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
+      updatePokemonList(pokemonStats);
     }
 
     // data is an array that gets populated with all the rows in the csv
