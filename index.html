@@ -86,14 +86,27 @@
           </div>
         </div>
         <div class="form-group">
-        <!--Dropdown-->
-          <label>Generation:</label>
-          <input type="number" class="form-control-inline"/>
+          <!--Dropdown-->
+          <p><strong>Generation:</strong> 
+            <select id="generation">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+            </select>
+          </p>
         </div>
         <div class="form-group">
-        <!--Dropdown-->
-          <label>Legendary:</label>
-          <input type="number" class="form-control-inline"/>
+          <!--Dropdown-->
+          <p><strong>Legendary:</strong> 
+            <select id="legendary">
+              <option value="1">yes</option>
+              <option value="0">no</option>
+            </select>
+          </p>
         </div>
         <!--Checkbox-->
         <h3>Choose up to 2 types!:</h3>
@@ -159,6 +172,8 @@ var kek2 = [];
       return d;
     })
 
+    console.log(data)
+
     var pokemons = [...new Set(data.map(function(d) { return d.name; }))]
 
         var options = d3.select("#pokemonSelection").selectAll("option")
@@ -168,30 +183,43 @@ var kek2 = [];
 
         var select = d3.select("#pokemonSelection")
           .on("change", function() {
-            // update(data, this.value)
             update(data, this.value);
           })
 
+        var selectGenaration = d3.select("#generation")
+          .on("change", function() {
+            updateGeneration(data, this.value);
+          })
+
+
     update(data, d3.select("#pokemonSelection").property("value"));
+    updateGeneration(data, d3.select('#generation').property("value"));
 
-
-
+    // update by pokemon name
     function update(data, pokemonName) {
     	kek2 = [];
-          // filter data based on the given years
-          var pokemonStats = _.filter(data, { 'name': pokemonName });
-          var newStats = [
-          				{axis:"HP",value: pokemonStats[0].hp},
-						{axis:"Attack",value: pokemonStats[0].attack},
-						{axis:"Defense",value: pokemonStats[0].defense},
-						{axis:"Sp. Atk",value: pokemonStats[0].sp_attack},
-						{axis:"Sp.Def",value: pokemonStats[0].sp_defense},
-						{axis:"Speed",value: pokemonStats[0].speed}
-          ];
-          kek2.push(newStats);
-          createRadarChart(kek2);
-          console.log(kek2);
-          }
+      // filter data based on the given years
+      var pokemonStats = _.filter(data, { 'name': pokemonName });
+      var newStats = [
+        {axis:"HP",value: pokemonStats[0].hp},
+        {axis:"Attack",value: pokemonStats[0].attack},
+        {axis:"Defense",value: pokemonStats[0].defense},
+        {axis:"Sp. Atk",value: pokemonStats[0].sp_attack},
+        {axis:"Sp.Def",value: pokemonStats[0].sp_defense},
+        {axis:"Speed",value: pokemonStats[0].speed}
+      ];
+      kek2.push(newStats);
+      createRadarChart(kek2);
+      console.log(kek2);
+    }
+
+    // update by pokemon gereration
+    function updateGeneration(data, generation) {
+    	kek2 = [];
+      // filter data based on the given pokemon generation
+      var pokemonStats = _.filter(data, { 'generation': generation });
+      console.log(pokemonStats);
+    }
 
     // data is an array that gets populated with all the rows in the csv
     // console.log(data);
@@ -209,7 +237,7 @@ var kek2 = [];
 			  w: width,
 			  h: height,
 			  margin: margin,
-			  maxValue: 100,
+			  maxValue: 300,
 			  levels: 5,
 			  roundStrokes: false,
 			  color: color
