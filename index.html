@@ -161,22 +161,31 @@
   <script src="RadarChart.js"></script>
   <script type"text/javascript">
 
-var thePokemon = [];
-var generation = 1;
-var legendary = 0;
-
   d3.csv('pokemon.csv', function(data) {
     data.forEach(function(d) {
       // returning each row of the csv and putting it into the data
       return d;
     })
 
+    //Intiallize variables
+    var thePokemon = [];
+    var generation = d3.select("#generation").property("value");
+    var legendary = d3.select("#legendary").property("value");
+
     console.log(data)
+    console.log(generation);
+    console.log(legendary)
 
     var select = d3.select("#pokemonSelection")
       .on("change", function() {
         updateChart(data, this.value);
       })
+
+    // var selectGenaration = d3.select("#generation")
+    //   .on("change", function() {
+    //     generation = this.value;
+    //     filterPokemonList(data, generation, legendary);
+    //   })  
 
     var selectGenaration = d3.select("#generation")
       .on("change", function() {
@@ -273,7 +282,7 @@ var legendary = 0;
 
 //Sliders
 	//Hp slider
-	var sliderRange = d3
+	var sliderHpRange = d3
 	    .sliderBottom()
 	    .min(0)
 	    .max(255)
@@ -294,10 +303,10 @@ var legendary = 0;
 	    .append('g')
 	    .attr('transform', 'translate(30,30)');
 
-	  gHpRange.call(sliderRange);
+	  gHpRange.call(sliderHpRange);
 
 	  d3.select('p#hp-value-range').text(
-	    sliderRange
+	    sliderHpRange
 	      .value()
 	      .join('-')
 	  );
