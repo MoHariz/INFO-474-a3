@@ -41,48 +41,48 @@
 
           <label class>Health Points:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="value-range"></p></div>
-            <div class="col-sm-7"><div id="slider-range"></div></div>
+            <div class="col-sm-3"><p id="hp-value-range"></p></div>
+            <div class="col-sm-7"><div id="hp-slider-range"></div></div>
           </div>
         </div>
         <div class="form-group">
         <!--Range-->
           <label>Attack:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="value-range"></p></div>
-            <div class="col-sm-7"><div id="slider-range"></div></div>
+            <div class="col-sm-3"><p id="atk-value-range"></p></div>
+            <div class="col-sm-7"><div id="atk-slider-range"></div></div>
           </div>
         </div>
         <div class="form-group">
         <!--Range-->
           <label>Defense:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="value-range"></p></div>
-            <div class="col-sm-7"><div id="slider-range"></div></div>
+            <div class="col-sm-3"><p id="def-value-range"></p></div>
+            <div class="col-sm-7"><div id="def-slider-range"></div></div>
           </div>
         </div>
         <div class="form-group">
         <!--Range-->
           <label>Sp. Atk:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="value-range"></p></div>
-            <div class="col-sm-7"><div id="slider-range"></div></div>
+            <div class="col-sm-3"><p id="spAtk-value-range"></p></div>
+            <div class="col-sm-7"><div id="spAtk-slider-range"></div></div>
           </div>
         </div>
         <div class="form-group">
         <!--Range-->
           <label>Sp. Def:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="value-range"></p></div>
-            <div class="col-sm-7"><div id="slider-range"></div></div>
+            <div class="col-sm-3"><p id="spDef-value-range"></p></div>
+            <div class="col-sm-7"><div id="spDef-slider-range"></div></div>
           </div>
         </div>
         <div class="form-group">
         <!--Range-->
           <label>Speed:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="value-range"></p></div>
-            <div class="col-sm-7"><div id="slider-range"></div></div>
+            <div class="col-sm-3"><p id="spd-value-range"></p></div>
+            <div class="col-sm-7"><div id="spd-slider-range"></div></div>
           </div>
         </div>
         <div class="form-group">
@@ -245,7 +245,188 @@ var kek2 = [];
 
 			RadarChart("#chart", kek2, radarChartOptions);
 	}
-			//Call function to draw the Radar chart
+			
+
+//Sliders
+	//Hp slider
+	var sliderRange = d3
+	    .sliderBottom()
+	    .min(0)
+	    .max(255)
+	    .width(300)
+	    .step(5)
+	    .ticks(5)
+	    .default([0, 100])
+	    .fill('#2196f3')
+	    .on('onchange', val => {
+	      d3.select('p#hp-value-range').text(val.join('-'));
+	    });
+
+	  var gHpRange = d3
+	    .select('div#hp-slider-range')
+	    .append('svg')
+	    .attr('width', 700)
+	    .attr('height', 75)
+	    .append('g')
+	    .attr('transform', 'translate(30,30)');
+
+	  gHpRange.call(sliderRange);
+
+	  d3.select('p#hp-value-range').text(
+	    sliderRange
+	      .value()
+	      .join('-')
+	  );
+
+	//Atk slider
+	var sliderAtkRange = d3
+	    .sliderBottom()
+	    .min(0)
+	    .max(185)
+	    .width(300)
+	    .step(5)
+	    .ticks(6)
+	    .default([0, 100])
+	    .fill('#2196f3')
+	    .on('onchange', val => {
+	      d3.select('p#atk-value-range').text(val.join('-'));
+	    });
+
+	  var gAtkRange = d3
+	    .select('div#atk-slider-range')
+	    .append('svg')
+	    .attr('width', 700)
+	    .attr('height', 75)
+	    .append('g')
+	    .attr('transform', 'translate(30,30)');
+
+	  gAtkRange.call(sliderAtkRange);
+
+	  d3.select('p#atk-value-range').text(
+	    sliderAtkRange
+	      .value()
+	      .join('-')
+	  );
+
+	//Def slider
+	var sliderDefRange = d3
+	    .sliderBottom()
+	    .min(0)
+	    .max(230)
+	    .width(300)
+	    .step(5)
+	    .ticks(5)
+	    .default([0, 100])
+	    .fill('#2196f3')
+	    .on('onchange', val => {
+	      d3.select('p#def-value-range').text(val.join('-'));
+	    });
+
+	  var gDefRange = d3
+	    .select('div#def-slider-range')
+	    .append('svg')
+	    .attr('width', 700)
+	    .attr('height', 75)
+	    .append('g')
+	    .attr('transform', 'translate(30,30)');
+
+	  gDefRange.call(sliderDefRange);
+
+	  d3.select('p#def-value-range').text(
+	    sliderDefRange
+	      .value()
+	      .join('-')
+	  );
+
+	//Sp. Atk slider
+	var sliderSpAtkRange = d3
+	    .sliderBottom()
+	    .min(0)
+	    .max(195)
+	    .width(300)
+	    .step(5)
+	    .ticks(6)
+	    .default([0, 100])
+	    .fill('#2196f3')
+	    .on('onchange', val => {
+	      d3.select('p#spAtk-value-range').text(val.join('-'));
+	    });
+
+	  var gSpAtkRange = d3
+	    .select('div#spAtk-slider-range')
+	    .append('svg')
+	    .attr('width', 700)
+	    .attr('height', 75)
+	    .append('g')
+	    .attr('transform', 'translate(30,30)');
+
+	  gSpAtkRange.call(sliderSpAtkRange);
+
+	  d3.select('p#spAtk-value-range').text(
+	    sliderSpAtkRange
+	      .value()
+	      .join('-')
+	  );
+
+	//Sp. Def slider
+	var sliderSpDefRange = d3
+	    .sliderBottom()
+	    .min(0)
+	    .max(230)
+	    .width(300)
+	    .step(5)
+	    .ticks(6)
+	    .default([0, 100])
+	    .fill('#2196f3')
+	    .on('onchange', val => {
+	      d3.select('p#spDef-value-range').text(val.join('-'));
+	    });
+
+	  var gSpDefRange = d3
+	    .select('div#spDef-slider-range')
+	    .append('svg')
+	    .attr('width', 700)
+	    .attr('height', 75)
+	    .append('g')
+	    .attr('transform', 'translate(30,30)');
+
+	  gSpDefRange.call(sliderSpDefRange);
+
+	  d3.select('p#spDef-value-range').text(
+	    sliderSpDefRange
+	      .value()
+	      .join('-')
+	  );
+
+	//Speed slider
+	var sliderSpdRange = d3
+	    .sliderBottom()
+	    .min(0)
+	    .max(180)
+	    .width(300)
+	    .step(5)
+	    .ticks(6)
+	    .default([0, 100])
+	    .fill('#2196f3')
+	    .on('onchange', val => {
+	      d3.select('p#spd-value-range').text(val.join('-'));
+	    });
+
+	  var gSpdRange = d3
+	    .select('div#spd-slider-range')
+	    .append('svg')
+	    .attr('width', 700)
+	    .attr('height', 75)
+	    .append('g')
+	    .attr('transform', 'translate(30,30)');
+
+	  gSpdRange.call(sliderSpdRange);
+
+	  d3.select('p#spd-value-range').text(
+	    sliderSpdRange
+	      .value()
+	      .join('-')
+	  );
   });
 
   			var margin = {top: 100, right: 100, bottom: 100, left: 100},
@@ -257,36 +438,6 @@ var kek2 = [];
 			////////////////////////////////////////////////////////////// 
 
 
-  var numbas = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-  var sliderRange = d3
-    .sliderBottom()
-    .min(d3.min(numbas))
-    .max(d3.max(numbas))
-    .width(300)
-    .tickFormat(d3.format('.2%'))
-    .ticks(5)
-    .default([0.015, 0.02])
-    .fill('#2196f3')
-    .on('onchange', val => {
-      d3.select('p#value-range').text(val.map(d3.format('.2%')).join('-'));
-    });
-
-  var gRange = d3
-    .selectAll('div#slider-range')
-    .append('svg')
-    .attr('width', 700)
-    .attr('height', 75)
-    .append('g')
-    .attr('transform', 'translate(30,30)');
-
-  gRange.call(sliderRange);
-
-  d3.selectAll('p#value-range').text(
-    sliderRange
-      .value()
-      .map(d3.format('.2%'))
-      .join('-')
-  );
   </script>
 
 
