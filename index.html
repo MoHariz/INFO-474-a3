@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html ng-app="RadarChart">
+
+<head>
+  <meta charset="utf-8">
+  <title>D3 Radar Chart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" />
+</head>
+
+<body class="container-fluid">
+
+  <!-- header -->
+  <header class="page-header">
+    <h1>Pokemon Stat. Chart</h1> 
+    <p class="text-small">Assignment 3</p>
+  </header>
+
+
+  <!-- main content -->
+  <div class="main container-fluid d-flex">
+    <div class="visualization col-6">
+    <h2>Visualization</h2>
+    <div id="chart"></div>
+
+    <!-- visualization -->
+      <p>Choose your pokemon:
+        <select id="pokemonSelection"></select>
+      </p>
+      <div class="visualization">
+        <radar csv="radar.csv" config="radar.config"></radar>
+      </div>
+    </div>
+
+
+    <!-- configuration -->
+    <div class="filterOnStats col-6">
+      <form>
+        <h1>Need help choosing?</h1>
+        <h4>Choose from these factors to narrow the list!</h4>
+        <div class="form-group">
+        <!--Range-->
+
+          <label class>Health Points:</label>
+          <div class="row align-items-center">
+            <div class="col-sm-3"><p id="value-range"></p></div>
+            <div class="col-sm-7"><div id="slider-range"></div></div>
+          </div>
+        </div>
+        <div class="form-group">
+        <!--Range-->
+          <label>Attack:</label>
+          <div class="row align-items-center">
+            <div class="col-sm-3"><p id="value-range"></p></div>
+            <div class="col-sm-7"><div id="slider-range"></div></div>
+          </div>
+        </div>
+        <div class="form-group">
+        <!--Range-->
+          <label>Defense:</label>
+          <div class="row align-items-center">
+            <div class="col-sm-3"><p id="value-range"></p></div>
+            <div class="col-sm-7"><div id="slider-range"></div></div>
+          </div>
+        </div>
+        <div class="form-group">
+        <!--Range-->
+          <label>Sp. Atk:</label>
+          <div class="row align-items-center">
+            <div class="col-sm-3"><p id="value-range"></p></div>
+            <div class="col-sm-7"><div id="slider-range"></div></div>
+          </div>
+        </div>
+        <div class="form-group">
+        <!--Range-->
+          <label>Sp. Def:</label>
+          <div class="row align-items-center">
+            <div class="col-sm-3"><p id="value-range"></p></div>
+            <div class="col-sm-7"><div id="slider-range"></div></div>
+          </div>
+        </div>
+        <div class="form-group">
+        <!--Range-->
+          <label>Speed:</label>
+          <div class="row align-items-center">
+            <div class="col-sm-3"><p id="value-range"></p></div>
+            <div class="col-sm-7"><div id="slider-range"></div></div>
+          </div>
+        </div>
+        <div class="form-group">
+        <!--Dropdown-->
+          <label>Generation:</label>
+          <input type="number" class="form-control-inline"/>
+        </div>
+        <div class="form-group">
+        <!--Dropdown-->
+          <label>Legendary:</label>
+          <input type="number" class="form-control-inline"/>
+        </div>
+        <!--Checkbox-->
+        <h3>Choose up to 2 types!:</h3>
+        <div class="form-group row d-flex">
+          <div class="typeSelection col-4 d-flex">
+            <div class="col-6">
+              <label class="checkbox"><input type="checkbox" />Grass</label>
+              <label class="checkbox"><input type="checkbox" />Fire</label>
+              <label class="checkbox"><input type="checkbox" />Water</label>
+            </div>
+            <div class="col-6">
+              <label class="checkbox"><input type="checkbox" />Bug</label>
+              <label class="checkbox"><input type="checkbox" />Normal</label>
+              <label class="checkbox"><input type="checkbox" />Poison</label>
+            </div>
+          </div>
+          <div class="typeSelection col-4 d-flex">
+          <div class="col-6">
+            <label class="checkbox"><input type="checkbox" />Electric</label>
+            <label class="checkbox"><input type="checkbox" />Ground</label>
+            <label class="checkbox"><input type="checkbox" />Fairy</label>
+            </div>
+            <div class="col-6">
+            <label class="checkbox"><input type="checkbox" />Fighting</label>
+            <label class="checkbox"><input type="checkbox" />Psychic</label>
+            <label class="checkbox"><input type="checkbox" />Rock</label>
+            </div>
+          </div>
+          <div class="typeSelection col-4 d-flex">
+          <div class="col-6">
+            <label class="checkbox"><input type="checkbox" />Ghost</label>
+            <label class="checkbox"><input type="checkbox" />Ice</label>
+            <label class="checkbox"><input type="checkbox" />Dragon</label>
+            </div>
+            <div class="col-6">
+            <label class="checkbox"><input type="checkbox" />Dark</label>
+            <label class="checkbox"><input type="checkbox" />Steel</label>
+            <label class="checkbox"><input type="checkbox" />Flying</label>
+            </div>
+          </div>
+      </form>
+    </div>
+  </div>
+  <hr />
+
+
+
+  <!-- scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.js"></script>
+  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script src="https://unpkg.com/d3-simple-slider"></script>
+  <script type"text/javascript">
+
+
+  d3.csv('pokemon.csv', function(data) {
+    data.forEach(function(d) {
+      // returning each row of the csv and putting it into the data
+      d.name = d.name;
+      d.hp = +d.hp;
+      // console.log(d.name);
+      return d;
+    })
+
+    var pokemons = [...new Set(data.map(function(d) { return d.name; }))]
+
+        var options = d3.select("#pokemonSelection").selectAll("option")
+          .data(pokemons)
+        .enter().append("option")
+          .text(function(d) {return d;})
+
+        var select = d3.select("#pokemonSelection")
+          .on("change", function() {
+            // update(data, this.value)
+            var newPokemon = _.filter(data, { 'name': this.value });
+            console.log(newPokemon);
+            console.log(newPokemon[0].attack);
+          })
+
+    update(data, d3.select("#pokemonSelection").property("value"));
+
+    function update(data, pokemonName) {
+          // filter data based on the given years
+          var data = _.filter(data, { 'name': pokemonName });
+          console.log(data[0]);
+          }
+
+    console.log(pokemons);
+
+    // data is an array that gets populated with all the rows in the csv
+    // console.log(data);
+  });
+
+
+
+  var numbas = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+  var sliderRange = d3
+    .sliderBottom()
+    .min(d3.min(numbas))
+    .max(d3.max(numbas))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default([0.015, 0.02])
+    .fill('#2196f3')
+    .on('onchange', val => {
+      d3.select('p#value-range').text(val.map(d3.format('.2%')).join('-'));
+    });
+
+  var gRange = d3
+    .selectAll('div#slider-range')
+    .append('svg')
+    .attr('width', 700)
+    .attr('height', 75)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gRange.call(sliderRange);
+
+  d3.selectAll('p#value-range').text(
+    sliderRange
+      .value()
+      .map(d3.format('.2%'))
+      .join('-')
+  );
+  </script>
+
+
+  <style> 
+    label {
+      font-weight: bold;
+    }
+
+
+  </style> 
+</body>
+
+</html>
