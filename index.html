@@ -173,6 +173,10 @@
     var legendary = d3.select("#legendary").property("value");
     var hpValue;
     var atkValue;
+    var defValue;
+    var spAtkValue;
+    var spDefValue;
+    var spdValue;
 
     console.log(hpValue);
 
@@ -185,14 +189,14 @@
       .on("change", function() {
         generation = this.value;
         grabBrushValues();
-        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
       })
 
     var selectLegendary = d3.select("#legendary")
       .on("change", function() {
         legendary = this.value;
         grabBrushValues();
-        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
       })
 
     //Creates chart with first pokemon in list on start
@@ -230,15 +234,23 @@
     }
 
 
-    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax, atkMin, atkMax) {
+    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax, atkMin, atkMax, defMin, defMax, spAtkMin, spAtkMax, spDefMin, spDefMax, spdMin, spdMax) {
       // filter data based on the given pokemon generation
       var hpMinInt = parseInt(hpMin);
       var hpMaxInt = parseInt(hpMax);
       var atkMinInt = parseInt(atkMin);
       var atkMaxInt = parseInt(atkMax);
+      var defMinInt = parseInt(defMin);
+      var defMaxInt = parseInt(defMax);
+      var spAtkMinInt = parseInt(spAtkMin);
+      var spAtkMaxInt = parseInt(spAtkMax);
+      var spDefMinInt = parseInt(spDefMin);
+      var spDefMaxInt = parseInt(spDefMax);
+      var spdMinInt = parseInt(spdMin);
+      var spdMaxInt = parseInt(spdMax);
 
       var brushedPokemonArray = _.filter(data, function(o) {
-    		return (o.hp >= hpMinInt && o.hp <= hpMaxInt) && (o.attack >= atkMinInt && o.attack <= atkMaxInt);
+    		return (o.hp >= hpMinInt && o.hp <= hpMaxInt) && (o.attack >= atkMinInt && o.attack <= atkMaxInt) && (o.defense >= defMinInt && o.defense <= defMaxInt) && (o.sp_attack >= spAtkMinInt && o.sp_attack <= spAtkMaxInt) && (o.sp_defense >= spDefMinInt && o.sp_defense <= spDefMaxInt) && (o.speed >= spdMinInt && o.speed <= spdMaxInt);
       });
 
       var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
@@ -250,6 +262,10 @@
     function grabBrushValues() {
       hpValue = d3.select("#hp-value-range").text().split("-");
       atkValue = d3.select("#atk-value-range").text().split("-");
+      defValue = d3.select("#def-value-range").text().split("-");
+      spAtkValue = d3.select("#spAtk-value-range").text().split("-");
+      spDefValue = d3.select("#spDef-value-range").text().split("-");
+      spdValue = d3.select("#spd-value-range").text().split("-");
     }
 
 
@@ -288,12 +304,12 @@
 	    .width(300)
 	    .step(5)
 	    .ticks(5)
-	    .default([0, 100])
+	    .default([0, 255])
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#hp-value-range').text(val.join('-'));
 	      grabBrushValues();
-          filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
+          filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
 	    });
 
 	  var gHpRange = d3
@@ -320,12 +336,12 @@
 	    .width(300)
 	    .step(5)
 	    .ticks(6)
-	    .default([0, 100])
+	    .default([0, 185])
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#atk-value-range').text(val.join('-'));
         grabBrushValues();
-        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
 	    });
 
 	  var gAtkRange = d3
@@ -352,10 +368,12 @@
 	    .width(300)
 	    .step(5)
 	    .ticks(5)
-	    .default([0, 100])
+	    .default([0, 230])
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#def-value-range').text(val.join('-'));
+	      grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
 	    });
 
 	  var gDefRange = d3
@@ -382,10 +400,12 @@
 	    .width(300)
 	    .step(5)
 	    .ticks(6)
-	    .default([0, 100])
+	    .default([0, 195])
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#spAtk-value-range').text(val.join('-'));
+	      grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
 	    });
 
 	  var gSpAtkRange = d3
@@ -412,10 +432,12 @@
 	    .width(300)
 	    .step(5)
 	    .ticks(6)
-	    .default([0, 100])
+	    .default([0, 230])
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#spDef-value-range').text(val.join('-'));
+	      grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
 	    });
 
 	  var gSpDefRange = d3
@@ -442,10 +464,12 @@
 	    .width(300)
 	    .step(5)
 	    .ticks(6)
-	    .default([0, 100])
+	    .default([0, 180])
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#spd-value-range').text(val.join('-'));
+	      grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
 	    });
 
 	  var gSpdRange = d3
