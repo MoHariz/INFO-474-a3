@@ -49,7 +49,7 @@
         <!--Range-->
           <label>Attack:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="atk-value-range"></p></div>
+            <div class="col-sm-3"><p id="atk-value-range">0-100</p></div>
             <div class="col-sm-7"><div id="atk-slider-range"></div></div>
           </div>
         </div>
@@ -167,10 +167,14 @@
       return d;
     })
 
-    //Intiallize variables
+    //Intialize variables
     var thePokemon = [];
     var generation = d3.select("#generation").property("value");
     var legendary = d3.select("#legendary").property("value");
+    var hpValue;
+    var atkValue;
+
+    console.log(hpValue);
 
     var select = d3.select("#pokemonSelection")
       .on("change", function() {
@@ -180,13 +184,15 @@
     var selectGenaration = d3.select("#generation")
       .on("change", function() {
         generation = this.value;
-        filterPokemonList(data, generation, legendary);
+        grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
       })
 
     var selectLegendary = d3.select("#legendary")
       .on("change", function() {
         legendary = this.value;
-        filterPokemonList(data, generation, legendary);
+        grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
       })
 
     //Creates chart with first pokemon in list on start
@@ -194,7 +200,6 @@
 
     function updatePokemonList(data) {
     	var newPokemons = [...new Set(data.map(function(d) { return d.name; }))]
-    	console.log(newPokemons);
     	d3.selectAll(".pokemon").remove();
 
     	var newOptions = d3.select("#pokemonSelection").selectAll("option")
@@ -224,31 +229,29 @@
       createRadarChart(thePokemon);
     }
 
-    // update by pokemon gereration
-    // function updateGeneration(data, generation) {
-    //   // filter data based on the given pokemon generation
-    //   var pokemonStats = _.filter(data, { 'generation': generation });
-    //   updatePokemonList(pokemonStats);
-    // }
 
-    // function updateLegendary(data, isLegendary) {
-    //   // filter data based on the given pokemon generation
-    //   var pokemonStats = _.filter(data, { 'is_legendary': isLegendary });
-    //   console.log(pokemonStats);
-    //   // updatePokemonList(pokemonStats);
-    // }
-
-    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax) {
+    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax, atkMin, atkMax) {
       // filter data based on the given pokemon generation
-      // var pokemonStats = _.filter(data, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
-      var pokemonStats = _.filter(data, function(o) {
-        return o.hp > hpMin && o.hp < hpMax;
-      } );
-      console.log(hpMin);
-      console.log(hpMax);
+      var hpMinInt = parseInt(hpMin);
+      var hpMaxInt = parseInt(hpMax);
+      var atkMinInt = parseInt(atkMin);
+      var atkMaxInt = parseInt(atkMax);
+
+      var brushedPokemonArray = _.filter(data, function(o) {
+    		return (o.hp >= hpMinInt && o.hp <= hpMaxInt) && (o.attack >= atkMinInt && o.attack <= atkMaxInt);
+      });
+
+      var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
       console.log(pokemonStats);
-      // updatePokemonList(pokemonStats);
+
+      updatePokemonList(pokemonStats);
     }
+
+    function grabBrushValues() {
+      hpValue = d3.select("#hp-value-range").text().split("-");
+      atkValue = d3.select("#atk-value-range").text().split("-");
+    }
+
 
     // data is an array that gets populated with all the rows in the csv
     // console.log(data);
@@ -289,8 +292,8 @@
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#hp-value-range').text(val.join('-'));
-        var hpValue = (d3.select("#hp-value-range").text().split("-"));
-        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1]);
+	      grabBrushValues();
+          filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
 	    });
 
 	  var gHpRange = d3
@@ -321,6 +324,8 @@
 	    .fill('#2196f3')
 	    .on('onchange', val => {
 	      d3.select('p#atk-value-range').text(val.join('-'));
+        grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1]);
 	    });
 
 	  var gAtkRange = d3
