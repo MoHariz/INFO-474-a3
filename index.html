@@ -113,38 +113,38 @@
         <div class="form-group row d-flex">
           <div class="typeSelection col-4 d-flex">
             <div class="col-6">
-              <label class="checkbox"><input type="checkbox" />Grass</label>
-              <label class="checkbox"><input type="checkbox" />Fire</label>
-              <label class="checkbox"><input type="checkbox" />Water</label>
+              <label class="checkbox"><input class="pokemonType" type="checkbox" />Grass</label>
+              <label class="checkbox"><input class="pokemonType" type="checkbox" />Fire</label>
+              <label class="checkbox"><input class="pokemonType" type="checkbox" />Water</label>
             </div>
             <div class="col-6">
-              <label class="checkbox"><input type="checkbox" />Bug</label>
-              <label class="checkbox"><input type="checkbox" />Normal</label>
-              <label class="checkbox"><input type="checkbox" />Poison</label>
+              <label class="checkbox"><input class="pokemonType" type="checkbox" />Bug</label>
+              <label class="checkbox"><input class="pokemonType" type="checkbox" />Normal</label>
+              <label class="checkbox"><input class="pokemonType" type="checkbox" />Poison</label>
             </div>
           </div>
           <div class="typeSelection col-4 d-flex">
           <div class="col-6">
-            <label class="checkbox"><input type="checkbox" />Electric</label>
-            <label class="checkbox"><input type="checkbox" />Ground</label>
-            <label class="checkbox"><input type="checkbox" />Fairy</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Electric</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Ground</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Fairy</label>
             </div>
             <div class="col-6">
-            <label class="checkbox"><input type="checkbox" />Fighting</label>
-            <label class="checkbox"><input type="checkbox" />Psychic</label>
-            <label class="checkbox"><input type="checkbox" />Rock</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Fighting</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Psychic</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Rock</label>
             </div>
           </div>
           <div class="typeSelection col-4 d-flex">
           <div class="col-6">
-            <label class="checkbox"><input type="checkbox" />Ghost</label>
-            <label class="checkbox"><input type="checkbox" />Ice</label>
-            <label class="checkbox"><input type="checkbox" />Dragon</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Ghost</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Ice</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Dragon</label>
             </div>
             <div class="col-6">
-            <label class="checkbox"><input type="checkbox" />Dark</label>
-            <label class="checkbox"><input type="checkbox" />Steel</label>
-            <label class="checkbox"><input type="checkbox" />Flying</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Dark</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Steel</label>
+            <label class="checkbox"><input class="pokemonType" type="checkbox" />Flying</label>
             </div>
           </div>
       </form>
@@ -463,6 +463,44 @@
 	      .value()
 	      .join('-')
 	  );
+
+    //Type checlbox
+    // making sure only two pokemon types are selected
+    var typeCheckBox = d3
+      .selectAll('.pokemonType').on("change", function() {
+        if (getSelectedTypes().length === 2) {
+          var boxes = d3.selectAll('.pokemonType')._groups[0]
+          for (var i = 0; i < boxes.length; i++) {
+            if(!boxes[i].checked) {
+              boxes[i].disabled = true
+            }
+          }
+        } else if (getSelectedTypes().length <= 2){
+          enableAllCheckbox()
+        }
+      })
+
+    // a function that enables all the checkbox when less than two pokemon types are selected
+    function enableAllCheckbox() {
+      var disbld = d3.selectAll('.pokemonType')._groups[0]
+      for (var j = 0; j < disbld.length; j++) {
+        if (disbld[j].disabled) {
+          disbld[j].disabled = false
+        }
+      }
+    }
+
+    // get the values of the selected types
+    function getSelectedTypes() {
+      var boxes = d3.selectAll('.pokemonType')._groups[0]
+      var types = []
+      for (var i = 0; i < boxes.length; i++) {
+        if(boxes[i].checked) {
+          types.push(boxes[i].parentElement.innerText)
+        }
+      }
+      return(types)
+    }
   });
 
   			var margin = {top: 100, right: 100, bottom: 100, left: 100},
