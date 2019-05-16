@@ -157,8 +157,13 @@
     var spAtkValue;
     var spDefValue;
     var spdValue;
+    var primaryType = d3.select("#primary").property("value");
+    var secondaryType = d3.select("#secondary").property("value");
 
     console.log(hpValue);
+    console.log(primaryType);
+    console.log(secondaryType);
+
 
     var select = d3.select("#pokemonSelection")
       .on("change", function() {
@@ -175,6 +180,20 @@
     var selectLegendary = d3.select("#legendary")
       .on("change", function() {
         legendary = this.value;
+        grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
+      })
+
+    var selectPrimaryType = d3.select("#primary")
+      .on("change", function() {
+        primaryType = this.value;
+        grabBrushValues();
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
+      })
+
+    var selectSecondaryType = d3.select("#secondary")
+      .on("change", function() {
+        secondaryType = this.value;
         grabBrushValues();
         filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
       })
