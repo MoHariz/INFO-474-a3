@@ -160,9 +160,9 @@
     var primaryType = d3.select("#primary").property("value");
     var secondaryType = d3.select("#secondary").property("value");
 
-    console.log(hpValue);
-    console.log(primaryType);
-    console.log(secondaryType);
+    // console.log(hpValue);
+    // console.log(primaryType);
+    // console.log(secondaryType);
 
 
     var select = d3.select("#pokemonSelection")
@@ -188,14 +188,14 @@
       .on("change", function() {
         primaryType = this.value;
         grabBrushValues();
-        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1], primaryType);
       })
 
     var selectSecondaryType = d3.select("#secondary")
       .on("change", function() {
         secondaryType = this.value;
         grabBrushValues();
-        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1]);
+        filterPokemonList(data, generation, legendary, hpValue[0], hpValue[1], atkValue[0], atkValue[1], defValue[0], defValue[1], spAtkValue[0], spAtkValue[1], spDefValue[0], spDefValue[1], spdValue[0], spdValue[1], primaryType, secondaryType);
       })
 
     //Creates chart with first pokemon in list on start
@@ -233,7 +233,7 @@
     }
 
 
-    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax, atkMin, atkMax, defMin, defMax, spAtkMin, spAtkMax, spDefMin, spDefMax, spdMin, spdMax) {
+    function filterPokemonList(data, theGeneration, isLegendary, hpMin, hpMax, atkMin, atkMax, defMin, defMax, spAtkMin, spAtkMax, spDefMin, spDefMax, spdMin, spdMax, thePrimaryType, theSecondaryType) {
       // filter data based on the given pokemon generation
       var hpMinInt = parseInt(hpMin);
       var hpMaxInt = parseInt(hpMax);
@@ -251,9 +251,28 @@
       var brushedPokemonArray = _.filter(data, function(o) {
     		return (o.hp >= hpMinInt && o.hp <= hpMaxInt) && (o.attack >= atkMinInt && o.attack <= atkMaxInt) && (o.defense >= defMinInt && o.defense <= defMaxInt) && (o.sp_attack >= spAtkMinInt && o.sp_attack <= spAtkMaxInt) && (o.sp_defense >= spDefMinInt && o.sp_defense <= spDefMaxInt) && (o.speed >= spdMinInt && o.speed <= spdMaxInt);
       });
+      
+      var pokemonStats;
 
-      var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
-      console.log(pokemonStats);
+      // console.log(thePrimaryType, theSecondaryType);
+
+      // if no types selected, then dont filter by types
+      if ((thePrimaryType === 'none' || thePrimaryType === undefined) && (theSecondaryType === 'none' || theSecondaryType === undefined)) {
+        pokemonStats =  _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() })
+      // if selected only the primary type, filter by the primary type only
+      } else if ((thePrimaryType !== 'none' || thePrimaryType !== undefined) && (theSecondaryType === 'none' || theSecondaryType === undefined)) {
+        pokemonStats =  _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString(), 'type1': thePrimaryType.toString() })
+      // if selected only the secondary type, filter by the primary type only
+      } else if ((theSecondaryType !== 'none' || theSecondaryType !== undefined) && (thePrimaryType === 'none' || thePrimaryType === undefined)) {
+        pokemonStats =  _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString(), 'type2': theSecondaryType.toString() })
+      } else {
+      // else primary and secondary type are selected
+        pokemonStats =  _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString(), 'type1': thePrimaryType.toString(), 'type2': theSecondaryType.toString() })
+      }
+
+      // var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
+      
+      console.table(pokemonStats);
 
       updatePokemonList(pokemonStats);
     }
@@ -516,14 +535,14 @@
 
         primaryTypeOptions.enter().append("option")
         	.attr('class', 'primary-type')
-          .text(function(d) {return d;})
+          .text(function(d) {return d.toLowerCase();})
     // secondary type
     var primaryTypeOptions = d3.select("#secondary").selectAll("option")
     .data(pokemonTypes)
 
         primaryTypeOptions.enter().append("option")
-        	.attr('class', 'primary-type')
-          .text(function(d) {return d;})
+        	.attr('class', 'secondary-type')
+          .text(function(d) {return d.toLowerCase();})
 
           
 
