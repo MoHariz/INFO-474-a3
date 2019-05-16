@@ -22,7 +22,7 @@
   <div class="main container-fluid d-flex">
     <div class="visualization col-6">
     <h2>Visualization</h2>
-    <p>Choose your pokemon:
+    <p><strong>Choose your pokemon:</strong> 
     	<select id="pokemonSelection"></select>
     </p>
     <!-- visualization -->
@@ -34,7 +34,7 @@
     <!-- configuration -->
     <div class="filterOnStats col-6">
       <form>
-        <h1>Need help choosing?</h1>
+        <h2>Need help choosing?</h2>
         <h4>Choose from these factors to narrow the list!</h4>
         <div class="form-group">
         <!--Range-->
@@ -108,45 +108,25 @@
             </select>
           </p>
         </div>
+
         <!--Checkbox-->
-        <h3>Choose up to 2 types!:</h3>
-        <div class="form-group row d-flex">
-          <div class="typeSelection col-4 d-flex">
-            <div class="col-6">
-              <label class="checkbox"><input class="pokemonType" type="checkbox" />Grass</label>
-              <label class="checkbox"><input class="pokemonType" type="checkbox" />Fire</label>
-              <label class="checkbox"><input class="pokemonType" type="checkbox" />Water</label>
-            </div>
-            <div class="col-6">
-              <label class="checkbox"><input class="pokemonType" type="checkbox" />Bug</label>
-              <label class="checkbox"><input class="pokemonType" type="checkbox" />Normal</label>
-              <label class="checkbox"><input class="pokemonType" type="checkbox" />Poison</label>
-            </div>
+        <h4 class="mt-5">Select the Pokemon's primary and secondary type:</h4>
+        <div class="row">
+          <div class="form-group col-6 mt-3">
+            <!--Dropdown for primary type-->
+            <p><strong>Primary:</strong> 
+              <select id="primary">
+              </select>
+            </p>
           </div>
-          <div class="typeSelection col-4 d-flex">
-          <div class="col-6">
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Electric</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Ground</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Fairy</label>
-            </div>
-            <div class="col-6">
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Fighting</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Psychic</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Rock</label>
-            </div>
+          <div class="form-group col-6 mt-3">
+            <!--Dropdown for primary type-->
+            <p><strong>Secondary:</strong> 
+              <select id="secondary">
+              </select>
+            </p>
           </div>
-          <div class="typeSelection col-4 d-flex">
-          <div class="col-6">
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Ghost</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Ice</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Dragon</label>
-            </div>
-            <div class="col-6">
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Dark</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Steel</label>
-            <label class="checkbox"><input class="pokemonType" type="checkbox" />Flying</label>
-            </div>
-          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -488,43 +468,46 @@
 	      .join('-')
 	  );
 
-    //Type checlbox
-    // making sure only two pokemon types are selected
-    var typeCheckBox = d3
-      .selectAll('.pokemonType').on("change", function() {
-        if (getSelectedTypes().length === 2) {
-          var boxes = d3.selectAll('.pokemonType')._groups[0]
-          for (var i = 0; i < boxes.length; i++) {
-            if(!boxes[i].checked) {
-              boxes[i].disabled = true
-            }
-          }
-        } else if (getSelectedTypes().length <= 2){
-          enableAllCheckbox()
-        }
-      })
+    // pokemon type dropdowns
+    var pokemonTypes = [
+      'None', 
+      'Grass', 
+      'Fire', 
+      'Water', 
+      'Bug', 
+      'Normal', 
+      'Poison', 
+      'Electric', 
+      'Ground', 
+      'Fairy', 
+      'Fighting', 
+      'Psychic', 
+      'Rock', 
+      'Ghost', 
+      'Ice', 
+      'Dragon', 
+      'Dark', 
+      'Steel', 
+      'Flying'
+    ]
 
-    // a function that enables all the checkbox when less than two pokemon types are selected
-    function enableAllCheckbox() {
-      var disbld = d3.selectAll('.pokemonType')._groups[0]
-      for (var j = 0; j < disbld.length; j++) {
-        if (disbld[j].disabled) {
-          disbld[j].disabled = false
-        }
-      }
-    }
+    // primary type
+    var primaryTypeOptions = d3.select("#primary").selectAll("option")
+          .data(pokemonTypes)
 
-    // get the values of the selected types
-    function getSelectedTypes() {
-      var boxes = d3.selectAll('.pokemonType')._groups[0]
-      var types = []
-      for (var i = 0; i < boxes.length; i++) {
-        if(boxes[i].checked) {
-          types.push(boxes[i].parentElement.innerText)
-        }
-      }
-      return(types)
-    }
+        primaryTypeOptions.enter().append("option")
+        	.attr('class', 'primary-type')
+          .text(function(d) {return d;})
+    // secondary type
+    var primaryTypeOptions = d3.select("#secondary").selectAll("option")
+    .data(pokemonTypes)
+
+        primaryTypeOptions.enter().append("option")
+        	.attr('class', 'primary-type')
+          .text(function(d) {return d;})
+
+          
+
   });
 
   			var margin = {top: 100, right: 100, bottom: 100, left: 100},
