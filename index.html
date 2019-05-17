@@ -24,6 +24,8 @@
     <p><strong>Choose your pokemon:</strong> 
     	<select id="pokemonSelection"></select>
     </p>
+    <p>Number of pokemons in list: <span id="count"></span></p>
+    <p id="error"></p>
     <!-- visualization -->
     <div id="chart"></div>
 
@@ -211,6 +213,16 @@
         	.attr('class', 'pokemon')
           .text(function(d) {return d;})
 
+       var count = d3.select("#count").text(newPokemons.length);
+
+      if (newPokemons.length == 0) {
+      	d3.select("#error").text("There are no pokemons that matches the stats you choose!")
+      	.attr("hidden",null);
+      } else {
+      	d3.select("#error").attr("hidden",true);
+      }
+   
+
       updateChart(data, d3.select("#pokemonSelection").property("value"));
     }
 
@@ -223,7 +235,7 @@
         {axis:"HP",value: pokemonStats[0].hp},
         {axis:"Attack",value: pokemonStats[0].attack},
         {axis:"Defense",value: pokemonStats[0].defense},
-        {axis:"Sp. Atk",value: pokemonStats[0].sp_attack},
+        {axis:"Sp.Atk",value: pokemonStats[0].sp_attack},
         {axis:"Sp.Def",value: pokemonStats[0].sp_defense},
         {axis:"Speed",value: pokemonStats[0].speed}
       ];
@@ -270,8 +282,7 @@
       }
 
       // var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
-      
-      console.table(pokemonStats);
+ 
 
       updatePokemonList(pokemonStats);
     }
@@ -562,6 +573,10 @@
   <style> 
     label {
       font-weight: bold;
+    }
+
+    #error {
+    	color: red;
     }
 
 
