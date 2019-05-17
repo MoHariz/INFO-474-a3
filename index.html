@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html ng-app="RadarChart">
+<html>
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D3 Radar Chart</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" />
 </head>
 
 <body class="container-fluid">
 
   <!-- header -->
-  <header class="page-header">
-    <h1>Pokemon Stat. Chart</h1> 
-    <p class="text-small">Assignment 3</p>
+  <header class="page-header mb-5">
+    <h1 class="text-center mt-3">Pokemon Stat. Chart</h1> 
+    <p class="text-small text-center">Assignment 3</p>
   </header>
 
 
   <!-- main content -->
   <div class="main container-fluid d-flex">
     <div class="visualization col-6">
-    <h2>Visualization</h2>
-    <p><strong>Choose your pokemon:</strong> 
-    	<select id="pokemonSelection"></select>
-    </p>
-    <!-- visualization -->
-    <div id="chart"></div>
-
+	    <h2>Visualization</h2>
+		    <p><strong>Choose your pokemon:</strong> 
+		    	<select id="pokemonSelection"></select>
+		    </p>
+		    <p>Number of pokemons in list: <span id="count"></span></p>
+		    <p id="error"></p>
+	    <!-- visualization -->
+	    <div id="chart"></div>
     </div>
 
 
@@ -41,7 +41,7 @@
 
           <label class>Health Points:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="hp-value-range"></p></div>
+            <div class="col-sm-2"><p id="hp-value-range"></p></div>
             <div class="col-sm-7"><div id="hp-slider-range"></div></div>
           </div>
         </div>
@@ -49,7 +49,7 @@
         <!--Range-->
           <label>Attack:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="atk-value-range">0-100</p></div>
+            <div class="col-sm-2"><p id="atk-value-range">0-100</p></div>
             <div class="col-sm-7"><div id="atk-slider-range"></div></div>
           </div>
         </div>
@@ -57,7 +57,7 @@
         <!--Range-->
           <label>Defense:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="def-value-range"></p></div>
+            <div class="col-sm-2"><p id="def-value-range"></p></div>
             <div class="col-sm-7"><div id="def-slider-range"></div></div>
           </div>
         </div>
@@ -65,7 +65,7 @@
         <!--Range-->
           <label>Sp. Atk:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="spAtk-value-range"></p></div>
+            <div class="col-sm-2"><p id="spAtk-value-range"></p></div>
             <div class="col-sm-7"><div id="spAtk-slider-range"></div></div>
           </div>
         </div>
@@ -73,7 +73,7 @@
         <!--Range-->
           <label>Sp. Def:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="spDef-value-range"></p></div>
+            <div class="col-sm-2"><p id="spDef-value-range"></p></div>
             <div class="col-sm-7"><div id="spDef-slider-range"></div></div>
           </div>
         </div>
@@ -81,7 +81,7 @@
         <!--Range-->
           <label>Speed:</label>
           <div class="row align-items-center">
-            <div class="col-sm-3"><p id="spd-value-range"></p></div>
+            <div class="col-sm-2"><p id="spd-value-range"></p></div>
             <div class="col-sm-7"><div id="spd-slider-range"></div></div>
           </div>
         </div>
@@ -136,7 +136,7 @@
 
   <!-- scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.js"></script>
-  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://unpkg.com/d3-simple-slider"></script>
   <script src="RadarChart.js"></script>
   <script type"text/javascript">
@@ -213,6 +213,16 @@
         	.attr('class', 'pokemon')
           .text(function(d) {return d;})
 
+       var count = d3.select("#count").text(newPokemons.length);
+
+      if (newPokemons.length == 0) {
+      	d3.select("#error").text("There are no pokemons that matches the stats you choose!")
+      	.attr("hidden",null);
+      } else {
+      	d3.select("#error").attr("hidden",true);
+      }
+   
+
       updateChart(data, d3.select("#pokemonSelection").property("value"));
     }
 
@@ -225,7 +235,7 @@
         {axis:"HP",value: pokemonStats[0].hp},
         {axis:"Attack",value: pokemonStats[0].attack},
         {axis:"Defense",value: pokemonStats[0].defense},
-        {axis:"Sp. Atk",value: pokemonStats[0].sp_attack},
+        {axis:"Sp.Atk",value: pokemonStats[0].sp_attack},
         {axis:"Sp.Def",value: pokemonStats[0].sp_defense},
         {axis:"Speed",value: pokemonStats[0].speed}
       ];
@@ -272,8 +282,7 @@
       }
 
       // var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
-      debugger
-      console.table(pokemonStats);
+ 
 
       updatePokemonList(pokemonStats);
     }
@@ -564,6 +573,10 @@
   <style> 
     label {
       font-weight: bold;
+    }
+
+    #error {
+    	color: red;
     }
 
 
