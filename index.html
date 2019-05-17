@@ -26,10 +26,16 @@
 		    </p>
         <p>Number of pokemons in list: <span id="count"></span></p>
         <div>Picture of <span id="pokemonName"></span>
-        <img src="" alt=""></div>
+          <div id="pokePic">
+            <!-- <img src="/pokemon/100.png" alt=""> -->
+          </div>
+        </div> 
 		    <p id="error"></p>
 	    <!-- visualization -->
-	    <div id="chart"></div>
+      <div id="chart"></div>
+      <h2>List of all pokemons you visited:</h2>
+      <div id="pokemonList">
+      </div>
     </div>
 
 
@@ -148,7 +154,7 @@
       // returning each row of the csv and putting it into the data
       return d;
     })
-
+    var set = new Set();
     //Intialize variables
     var thePokemon = [];
     var generation = d3.select("#generation").property("value");
@@ -167,9 +173,16 @@
     // console.log(secondaryType);
 
 
+    //d3.selectAll(".pokemonListimg").on("click", function (d, i) {
+      //console.log("yeet")
+      //window.alert("asdasd");
+      //console.log(d3.select(".pokemonListimg").property("alt"));
+    //})
+
     var select = d3.select("#pokemonSelection")
       .on("change", function() {
-        console.log("asdasdasdasd")
+        getImg(data, this.value);
+        console.log(set)
         updateChart(data, this.value);
       })
 
@@ -243,6 +256,61 @@
       ];
       thePokemon.push(newStats);
       createRadarChart(thePokemon);
+      pokeIndex = pokemonStats[0].pokedex_number
+      var picName = "/pokemon/" + pokeIndex + ".png"
+      d3.select(".currentPokemonImg").remove()
+      d3.select("#pokePic")
+        .append("img")
+        .attr("src", picName).attr('class', "currentPokemonImg").attr("alt", pokemonName).attr('width', 75)
+        .attr('height', 75)
+      set.add(pokemonName);
+    }
+
+    function getImgPath(data, name) {
+      var localPokemonStats = _.filter(data, { 'name': name });
+      return "/pokemon/" + localPokemonStats[0].pokedex_number + ".png"
+    }
+
+    function getImg(data) {
+
+      var localPokemonStats = _.filter(data, { 'pokedex_number': pokeIndex });
+      var pokemonName = localPokemonStats[0].name;
+      
+
+      d3.selectAll(".pokemonListimg").remove()
+      
+      set.forEach((key, val, _) =>{
+        
+        d3.select("#pokemonList").append("img")
+        .attr("src", getImgPath(data, val))
+        .attr('class', "pokemonListimg")
+        .attr("alt", val)
+        .attr('width', 75)
+        .attr('height', 75)
+        .on("click", function (d, i) {
+            //console.log(pokemonName)
+            
+            console.log(set)
+            updateChart(data, pokemonName)
+            d3.select("#pokemonSelection").property("value", pokemonName)
+          })
+      })
+        //d3.select("pokemonList").attr("src", localPicName).attr('class', "pokemonListimg").attr("alt", pokemonName).attr('width', 75)
+        //.attr('height', 75).on("click", function (d, i) {
+          //console.log(pokemonName)
+         // console.log(set)
+        //  updateChart(data, pokemonName)
+        //  d3.select("#pokemonSelection").property("value", pokemonName)
+       // })
+
+      //d3.select("#pokemonSelection").property("value", pokemonName)
+
+      //d3.select(".currentPokemonImg").remove()
+      //d3.select("#pokePic")
+        //.append("img")
+        //.attr("src", localPicName).attr('class', "currentPokemonImg").attr("alt", pokemonName).attr('width', 75)
+        //.attr('height', 75)
+
     }
 
 
