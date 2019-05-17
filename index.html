@@ -159,7 +159,7 @@
     var spdValue;
     var primaryType = d3.select("#primary").property("value");
     var secondaryType = d3.select("#secondary").property("value");
-
+    var pokeIndex=0;
     // console.log(hpValue);
     // console.log(primaryType);
     // console.log(secondaryType);
@@ -167,6 +167,7 @@
 
     var select = d3.select("#pokemonSelection")
       .on("change", function() {
+        console.log("asdasdasdasd")
         updateChart(data, this.value);
       })
 
@@ -271,7 +272,7 @@
       }
 
       // var pokemonStats = _.filter(brushedPokemonArray, { 'generation': theGeneration.toString(), 'is_legendary': isLegendary.toString() });
-      
+      debugger
       console.table(pokemonStats);
 
       updatePokemonList(pokemonStats);
