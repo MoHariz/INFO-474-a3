@@ -257,7 +257,7 @@
       thePokemon.push(newStats);
       createRadarChart(thePokemon);
       pokeIndex = pokemonStats[0].pokedex_number
-      var picName = "/pokemon/" + pokeIndex + ".png"
+      var picName = "./pokemon/" + pokeIndex + ".png"
       d3.select(".currentPokemonImg").remove()
       d3.select("#pokePic")
         .append("img")
@@ -268,7 +268,7 @@
 
     function getImgPath(data, name) {
       var localPokemonStats = _.filter(data, { 'name': name });
-      return "/pokemon/" + localPokemonStats[0].pokedex_number + ".png"
+      return "./pokemon/" + localPokemonStats[0].pokedex_number + ".png"
     }
 
     function getImg(data) {
